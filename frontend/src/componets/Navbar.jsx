@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Plane, MapPin, Info, Phone, Menu, X, LogIn, UserPlus, ChevronDown } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeTab, setActiveTab] = useState('home');
-  const [megaMenuOpen, setMegaMenuOpen] = useState(false);
 
   // Handle scroll effects
   useEffect(() => {
@@ -59,26 +59,15 @@ const Navbar = () => {
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center space-x-1">
               {[
-                { name: 'Home', icon: <Plane size={16} />, id: 'home' },
-                { 
-                  name: 'Packages', 
-                  icon: <MapPin size={16} />, 
-                  id: 'packages',
-                  hasMegaMenu: true 
-                },
-                { name: 'About', icon: <Info size={16} />, id: 'about' },
-                { name: 'Contact Us', icon: <Phone size={16} />, id: 'contact' }
+                { name: 'Home', icon: <Plane size={16} />, id: 'home', path: '/' },
+                { name: 'Destinations', icon: <MapPin size={16} />, id: 'destinations', path: '/destinations' },
+                { name: 'About', icon: <Info size={16} />, id: 'about', path: '/about' },
+                { name: 'Contact Us', icon: <Phone size={16} />, id: 'contact', path: '/contact' }
               ].map((item) => (
                 <div key={item.id} className="relative">
-                  <button
-                    onClick={() => {
-                      setActiveTab(item.id);
-                      if (item.hasMegaMenu) {
-                        setMegaMenuOpen(!megaMenuOpen);
-                      } else {
-                        setMegaMenuOpen(false);
-                      }
-                    }}
+                  <Link
+                    to={item.path}
+                    onClick={() => setActiveTab(item.id)}
                     className={`relative px-4 py-3 font-medium group flex items-center space-x-1 overflow-hidden rounded-lg mx-1 ${
                       activeTab === item.id 
                         ? 'text-yellow-300'
@@ -97,65 +86,27 @@ const Navbar = () => {
                     <span className="relative flex items-center justify-center space-x-1">
                       {item.icon}
                       <span>{item.name}</span>
-                      {item.hasMegaMenu && <ChevronDown size={14} className={megaMenuOpen ? "transform rotate-180 transition-transform" : "transition-transform"} />}
                     </span>
-                  </button>
-                  
-                  {/* Mega Menu for Packages */}
-                  {item.hasMegaMenu && megaMenuOpen && item.id === 'packages' && (
-                    <div className="absolute top-full left-0 w-screen max-w-4xl bg-gray-900 rounded-lg shadow-xl p-6 grid grid-cols-3 gap-4 text-gray-200 transform transition-all duration-300 border-t-4 border-yellow-400">
-                      <div>
-                        <h3 className="font-bold text-blue-300 mb-3 border-b border-gray-700 pb-2">Popular Destinations</h3>
-                        <ul className="space-y-2">
-                          {['Bali', 'Paris', 'Tokyo', 'New York', 'Santorini'].map(destination => (
-                            <li key={destination} className="hover:text-blue-300 cursor-pointer transition-colors flex items-center">
-                              <MapPin size={14} className="mr-2 text-purple-400" />
-                              {destination}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                      <div>
-                        <h3 className="font-bold text-blue-300 mb-3 border-b border-gray-700 pb-2">Holiday Types</h3>
-                        <ul className="space-y-2">
-                          {['Beach Getaway', 'Mountain Escape', 'Cultural Tours', 'City Breaks', 'Cruises'].map(type => (
-                            <li key={type} className="hover:text-blue-300 cursor-pointer transition-colors">
-                              {type}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                      <div className="bg-gradient-to-br from-gray-800 to-blue-900 p-4 rounded-lg">
-                        <h3 className="font-bold text-purple-300 mb-3">Special Offers</h3>
-                        <div className="bg-gray-800 p-3 rounded-lg shadow-md transform hover:scale-105 transition-transform">
-                          <p className="font-bold text-blue-300">Summer Sale!</p>
-                          <p className="text-sm text-gray-300">Get 30% off on select packages</p>
-                          <button className="mt-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-sm py-1 px-3 rounded-full hover:shadow-lg transition-all">
-                            Explore Now
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  )}
+                  </Link>
                 </div>
               ))}
             </div>
             
             {/* Desktop Action Buttons */}
             <div className="hidden md:flex items-center space-x-2">
-              <button className="flex items-center space-x-1 px-3 py-2 bg-gray-800 hover:bg-gray-700 text-gray-200 rounded-lg transition-colors">
+              <Link to="/signin" className="flex items-center space-x-1 px-3 py-2 bg-gray-800 hover:bg-gray-700 text-gray-200 rounded-lg transition-colors">
                 <LogIn size={18} />
                 <span className="text-sm">Sign In</span>
-              </button>
+              </Link>
               
-              <button className="flex items-center space-x-1 px-3 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:shadow-lg transition-all">
+              <Link to="/signup" className="flex items-center space-x-1 px-3 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:shadow-lg transition-all">
                 <UserPlus size={18} />
                 <span className="text-sm">Sign Up</span>
-              </button>
+              </Link>
               
-              <button className="flex items-center space-x-1 px-4 py-2 bg-yellow-500 text-gray-900 rounded-lg font-medium hover:shadow-lg hover:bg-yellow-400 transition-all ml-2">
+              <Link to="/booking" className="flex items-center space-x-1 px-4 py-2 bg-yellow-500 text-gray-900 rounded-lg font-medium hover:shadow-lg hover:bg-yellow-400 transition-all ml-2">
                 <span>Book Now</span>
-              </button>
+              </Link>
             </div>
             
             {/* Mobile Navigation Button */}
@@ -176,31 +127,49 @@ const Navbar = () => {
         <div className="lg:hidden bg-gray-900 border-t border-gray-800 shadow-xl rounded-b-xl overflow-hidden">
           <div className="max-w-6xl mx-auto p-4">
             <div className="flex flex-col space-y-3">
-              {['Home', 'Packages', 'About', 'Contact Us'].map((item, index) => (
-                <a
+              {[
+                { name: 'Home', path: '/' },
+                { name: 'Destinations', path: '/destinations' },
+                { name: 'About', path: '/about' },
+                { name: 'Contact Us', path: '/contact' }
+              ].map((item, index) => (
+                <Link
                   key={index}
-                  href={`#${item.toLowerCase()}`}
+                  to={item.path}
                   className="p-3 text-gray-200 font-medium flex items-center justify-between bg-gray-800 hover:bg-gray-700 rounded-lg border-l-4 border-transparent hover:border-blue-500 transition-all"
+                  onClick={() => setIsOpen(false)}
                 >
-                  <span>{item}</span>
+                  <span>{item.name}</span>
                   <ChevronDown size={16} className="text-gray-400" />
-                </a>
+                </Link>
               ))}
               
               <div className="pt-4 mt-2 border-t border-gray-700 grid grid-cols-2 gap-3">
-                <button className="py-3 px-4 bg-gray-800 text-gray-200 rounded-lg font-medium hover:bg-gray-700 transition-colors flex items-center justify-center space-x-2">
+                <Link 
+                  to="/signin"
+                  className="py-3 px-4 bg-gray-800 text-gray-200 rounded-lg font-medium hover:bg-gray-700 transition-colors flex items-center justify-center space-x-2"
+                  onClick={() => setIsOpen(false)}
+                >
                   <LogIn size={18} />
                   <span>Sign In</span>
-                </button>
-                <button className="py-3 px-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-medium hover:shadow-lg transition-all flex items-center justify-center space-x-2">
+                </Link>
+                <Link 
+                  to="/signup"
+                  className="py-3 px-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-medium hover:shadow-lg transition-all flex items-center justify-center space-x-2"
+                  onClick={() => setIsOpen(false)}
+                >
                   <UserPlus size={18} />
                   <span>Sign Up</span>
-                </button>
+                </Link>
               </div>
               
-              <button className="w-full py-3 px-4 bg-yellow-500 text-gray-900 rounded-lg font-medium mt-2 hover:shadow-lg transition-all">
+              <Link 
+                to="/booking"
+                className="w-full py-3 px-4 bg-yellow-500 text-gray-900 rounded-lg font-medium mt-2 hover:shadow-lg transition-all flex items-center justify-center"
+                onClick={() => setIsOpen(false)}
+              >
                 Book Now
-              </button>
+              </Link>
             </div>
           </div>
         </div>

@@ -124,10 +124,7 @@ const WorldTrekHero = () => {
                 />
                 
                 {/* Location markers */}
-                <div className="absolute top-1/4 left-1/2 w-2 h-2 bg-red-500 rounded-full transform -translate-x-1/2 animate-pulse"></div>
-                <div className="absolute top-1/2 left-1/3 w-2 h-2 bg-red-500 rounded-full transform -translate-x-1/2 animate-pulse"></div>
-                <div className="absolute bottom-1/4 left-1/2 w-2 h-2 bg-red-500 rounded-full transform -translate-x-1/2 animate-pulse"></div>
-                <div className="absolute top-2/3 right-1/3 w-2 h-2 bg-red-500 rounded-full transform -translate-x-1/2 animate-pulse"></div>
+                
                 
                 {/* Boats with realistic movement */}
                 <div 
