@@ -27,7 +27,7 @@ const Packages = () => {
             <div className="p-4">
               <h3 className="text-xl font-bold">{pkg.heading}</h3>
               <p className="text-gray-600 mt-2">{pkg.description}</p>
-              <p className="text-blue-500 font-bold mt-2">Price: ${pkg.price}</p>
+              <p className="text-blue-500 font-bold mt-2">Price: RS{pkg.price}</p>
               <p className="text-green-500 font-semibold">{pkg.daysNights}</p>
             </div>
           </div>
