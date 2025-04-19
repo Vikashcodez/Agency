@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
-import sliderImg from "../assets/images/saling.png";
-import sliderBg from "../assets/images/bg.jpg";
+import { ChevronLeft, ChevronRight, Anchor, Calendar, Wind, MapPin } from "lucide-react";
 import axios from "axios";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 
-const SliderSection = () => {
+const FlippingProductCards = () => {
   const [packages, setPackages] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-
+  
+  // Fetch packages from the database
   useEffect(() => {
     const fetchPackages = async () => {
       setIsLoading(true);
@@ -48,108 +47,141 @@ const SliderSection = () => {
   };
 
   return (
-    <section
-      className="relative overflow-hidden pt-12 bg-cover bg-no-repeat min-h-screen"
-      style={{ backgroundImage: `url(${sliderBg})`, backgroundPosition: "bottom" }}
-    >
-      <div className="absolute bottom-250 left-0 right-0 flex justify-center overflow-hidden pointer-events-none">
-        <img 
-          src={sliderImg} 
-          alt="Ship" 
-          className="w-[300px] md:w-[450px] animate-slider opacity-100" 
-        />
-      </div>
-      
-      <div className="absolute inset-0 bg-white/40 pointer-events-none"></div>
-      
-      <div className="relative container mx-auto px-4 pt-8 pb-20 z-10">
-        <div className="flex justify-center mb-12">
-          <div className="relative text-center">
-            <h2 className="text-3xl md:text-4xl font-bold text-blue-900">Our Packages</h2>
-            <p className="text-blue-800 mt-2">Discover our exclusive sailing adventures</p>
-          </div>
+    <div className="p-8 bg-gradient-to-b from-blue-50 to-blue-100 min-h-screen">
+      <div className="flex justify-center mb-12">
+        <div className="relative text-center">
+          <h2 className="text-4xl font-bold text-blue-900 drop-shadow-sm">Our Packages</h2>
+          <div className="h-1 w-20 bg-blue-600 mx-auto mt-2 mb-3 rounded-full"></div>
+          <p className="text-blue-800 text-lg font-medium">Discover our exclusive sailing adventures</p>
         </div>
+      </div>
+
+      <div className="relative px-2 md:px-10 max-w-6xl mx-auto">
+        {packages.length > 3 && (
+          <>
+            <button 
+              onClick={prevSlide}
+              className="absolute -left-2 md:left-0 top-1/2 -translate-y-1/2 bg-white hover:bg-blue-50 p-3 rounded-full shadow-lg z-20 text-blue-900 transition-all duration-300 hover:scale-110"
+              aria-label="Previous package"
+            >
+              <ChevronLeft size={24} />
+            </button>
+            <button 
+              onClick={nextSlide}
+              className="absolute -right-2 md:right-0 top-1/2 -translate-y-1/2 bg-white hover:bg-blue-50 p-3 rounded-full shadow-lg z-20 text-blue-900 transition-all duration-300 hover:scale-110"
+              aria-label="Next package"
+            >
+              <ChevronRight size={24} />
+            </button>
+          </>
+        )}
         
-        <div className="relative px-2 md:px-10 max-w-6xl mx-auto">
-          {packages.length > 3 && (
-            <>
-              <button 
-                onClick={prevSlide}
-                className="absolute -left-2 md:left-0 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-2 rounded-full shadow-lg z-20 text-blue-900"
-                aria-label="Previous package"
+        <div className="flex flex-wrap gap-8 justify-center">
+          {isLoading ? (
+            <div className="col-span-full flex justify-center py-16">
+              <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+            </div>
+          ) : packages.length === 0 ? (
+            <div className="col-span-full py-16 text-center bg-white rounded-lg shadow-lg">
+              <p className="text-xl font-semibold text-gray-700">No packages available.</p>
+            </div>
+          ) : (
+            getVisibleCards().map((pkg, index) => (
+              <div
+                key={pkg._id || index}
+                className="group relative w-80 h-96 cursor-pointer [perspective:1000px]"
               >
-                <ChevronLeft size={24} />
-              </button>
-              <button 
-                onClick={nextSlide}
-                className="absolute -right-2 md:right-0 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-2 rounded-full shadow-lg z-20 text-blue-900"
-                aria-label="Next package"
-              >
-                <ChevronRight size={24} />
-              </button>
-            </>
-          )}
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
-            {isLoading ? (
-              <div className="col-span-full flex justify-center py-16">
-                <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-              </div>
-            ) : packages.length === 0 ? (
-              <div className="col-span-full py-16 text-center bg-white/90 rounded-lg shadow-lg">
-                <p className="text-xl font-semibold text-gray-700">No packages available.</p>
-              </div>
-            ) : (
-              getVisibleCards().map((pkg, index) => (
-                <div 
-                  key={pkg._id || index} 
-                  className="bg-white rounded-lg shadow-lg overflow-hidden transform transition-all duration-300 hover:-translate-y-2 hover:shadow-xl"
+                <div
+                  className="relative w-full h-full transition-all duration-700 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]"
                 >
-                  <div className="relative h-40 md:h-48 overflow-hidden">
-                    <img 
-                      src={`http://localhost:5000/uploads/${pkg.thumbnail}`} 
-                      alt={pkg.heading} 
-                      className="w-full h-full object-cover transition-transform duration-700 hover:scale-110" 
-                    />
-                    <div className="absolute top-3 right-3 bg-blue-600 text-white px-2 py-1 rounded-full text-xs font-bold">
-                      RS {pkg.price}
+                  {/* Front - Photo, Package Name, and Price */}
+                  <div className="absolute w-full h-full [backface-visibility:hidden] bg-white rounded-xl shadow-xl overflow-hidden">
+                    <div className="relative h-52 overflow-hidden">
+                      <img
+                        src={`http://localhost:5000/uploads/${pkg.thumbnail}`}
+                        alt={pkg.heading}
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = "/api/placeholder/600/400"; // Fallback image
+                        }}
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20 flex flex-col justify-between p-4">
+                        <div className="flex justify-end">
+                          <span className="bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg">
+                            RS {pkg.price}
+                          </span>
+                        </div>
+                        <h2 className="text-2xl font-bold text-white drop-shadow-md">{pkg.heading}</h2>
+                      </div>
+                    </div>
+                    
+                    <div className="p-4">
+                      <h3 className="text-lg font-semibold text-blue-800 mb-3 flex items-center">
+                        <Anchor size={18} className="mr-2 text-blue-600" />
+                        Package Highlights
+                      </h3>
+                      <ul className="text-sm text-gray-700 space-y-2">
+                        {pkg.highlights?.slice(0, 3).map((highlight, i) => (
+                          <li key={i} className="flex items-start">
+                            <span className="text-blue-500 mr-2 font-bold">✓</span>
+                            {highlight}
+                          </li>
+                        ))}
+                      </ul>
+                      
+                      <div className="mt-4 flex justify-center">
+                        <span className="bg-blue-50 text-blue-800 px-3 py-1 rounded-full text-xs font-medium inline-flex items-center">
+                          <span className="mr-1">Hover to see details</span>
+                          <ChevronRight size={14} />
+                        </span>
+                      </div>
                     </div>
                   </div>
-                  <div className="p-4">
-                    <h3 className="text-lg md:text-xl font-bold text-blue-800 mb-2 truncate">{pkg.heading}</h3>
-                    <p className="text-gray-600 mb-3 text-sm line-clamp-2">{pkg.description}</p>
-                    <div className="flex justify-between items-center">
-                      <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">
+  
+                  {/* Back - Package Details, Days, and Book Button */}
+                  <div className="absolute w-full h-full [backface-visibility:hidden] [transform:rotateY(180deg)] bg-white rounded-xl shadow-xl p-6 flex flex-col">
+                    <h3 className="text-xl font-bold text-blue-800 mb-3">{pkg.heading}</h3>
+                    
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs font-medium flex items-center">
+                        <Calendar size={14} className="mr-1" />
                         {pkg.daysNights}
                       </span>
-                      <button className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg transition-colors text-sm font-medium">
+                      <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-medium flex items-center">
+                        <Wind size={14} className="mr-1" />
+                        {pkg.difficulty || 'Moderate'}
+                      </span>
+                    </div>
+                    
+                    <div className="flex items-start mb-2">
+                      <MapPin size={16} className="text-blue-600 mr-2 mt-1 flex-shrink-0" />
+                      <p className="text-gray-700 text-sm line-clamp-6">
+                        {pkg.description}
+                      </p>
+                    </div>
+                    
+                    <div className="mt-auto pt-2">
+                      <div className="flex justify-between items-center mb-4">
+                        <span className="text-2xl font-bold text-blue-600">RS {pkg.price}</span>
+                        <span className="text-sm bg-blue-50 text-blue-800 px-2 py-1 rounded-lg">
+                          {pkg.duration || '7 days'}
+                        </span>
+                      </div>
+                      <button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg transition-colors font-medium shadow-md hover:shadow-lg flex items-center justify-center">
                         Book Now
+                        <ChevronRight size={18} className="ml-1" />
                       </button>
                     </div>
                   </div>
                 </div>
-              ))
-            )}
-          </div>
+              </div>
+            ))
+          )}
         </div>
       </div>
-      
-      <style>
-        {`
-          @keyframes slider-move {
-            0% { transform: translateX(-100%) translateY(5%) scaleX(1); }
-            49% { transform: translateX(100%) translateY(-5%) scaleX(1); }
-            50% { transform: translateX(101%) translateY(-5%) scaleX(-1); }
-            99% { transform: translateX(-101%) translateY(5%) scaleX(-1); }
-            100% { transform: translateX(-100%) translateY(5%) scaleX(1); }
-          }
-          .animate-slider {
-            animation: slider-move 8s infinite ease-in-out;
-          }
-        `}
-      </style>
-    </section>
+    </div>
   );
 };
 
-export default SliderSection;
+export default FlippingProductCards;
