@@ -1,234 +1,420 @@
-import React, { useEffect, useState, useRef } from 'react';
-import map from '../assets/Images/map.png';
+import { useState, useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import birdImage from "../assets/Images/bird.png"; // Replace with your bird image path
+import islandImage from "../assets/Images/island.png"; // Replace with your island image path  
+import lighthouseImage from "../assets/Images/lighthouse.png"; // Replace with your lighthouse image path
 
-const WorldTrekHero = () => {
-  const [scrollY, setScrollY] = useState(0);
-  const boatRef1 = useRef(null);
-  const boatRef2 = useRef(null);
-  const boatRef3 = useRef(null);
-  const boatRef4 = useRef(null);
-  const dolphinRef1 = useRef(null);
-  const dolphinRef2 = useRef(null);
-  const mapRef = useRef(null);
-  const waveLayerRef1 = useRef(null);
-  const waveLayerRef2 = useRef(null);
-  const waveLayerRef3 = useRef(null);
+// Register ScrollTrigger plugin
+gsap.registerPlugin(ScrollTrigger);
+
+export default function CoastalLandingPage() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  
+  // Refs for animation targets
+  const containerRef = useRef(null);
+  const sunRef = useRef(null);
+  const moonRef = useRef(null);
+  const birdsRef = useRef(null);
+  const skyRef = useRef(null);
+  const starsRef = useRef(null);
+  const oceanRef = useRef(null);
+  const upperOceanRef = useRef(null);
+  const lighthouseRef = useRef(null);
+  const islandRef = useRef(null);
+  const wavesRef = useRef(null);
+  const cloudsRef = useRef(null);
 
   useEffect(() => {
-    // Parallax effect on scroll
-    const handleScroll = () => {
-      setScrollY(window.scrollY);
-    };
+    const container = containerRef.current;
+    
+    // Continuous wave animation
+    gsap.to(".wave", {
+      x: -100,
+      duration: 3,
+      ease: "none",
+      repeat: -1,
+    });
 
-    // Animated elements with increased speed
-    const animateElements = () => {
-      // Animate boats with faster wave movement
-      if (boatRef1.current && boatRef2.current && boatRef3.current && boatRef4.current) {
-        const time = Date.now() / 500; // Speed up by using 500 instead of 1000
-        boatRef1.current.style.transform = `translateX(${Math.sin(time) * 10}px) translateY(${Math.sin(time * 0.8) * 6}px)`;
-        boatRef2.current.style.transform = `translateX(${Math.sin(time * 0.7) * 12}px) translateY(${Math.sin(time * 0.9) * 8}px)`;
-        boatRef3.current.style.transform = `translateX(${Math.sin(time * 0.6) * 9}px) translateY(${Math.sin(time * 0.75) * 7}px)`;
-        boatRef4.current.style.transform = `translateX(${Math.sin(time * 0.5) * 11}px) translateY(${Math.sin(time * 0.85) * 6}px)`;
-      }
-      
-      // Animate dolphins with faster jumping motion
-      if (dolphinRef1.current && dolphinRef2.current) {
-        const time = Date.now() / 600; // Speed up dolphin animations
-        // First dolphin jumps every 2 seconds instead of 4
-        const jumpPhase1 = (time % 2) / 2;
-        const jumpY1 = jumpPhase1 > 0.5 ? 0 : Math.sin(jumpPhase1 * Math.PI) * 30;
-        dolphinRef1.current.style.transform = `translateY(-${jumpY1}px) rotate(${jumpY1 > 5 ? 15 : 0}deg)`;
-        
-        // Second dolphin jumps with offset
-        const jumpPhase2 = ((time + 1) % 2) / 2;
-        const jumpY2 = jumpPhase2 > 0.5 ? 0 : Math.sin(jumpPhase2 * Math.PI) * 30;
-        dolphinRef2.current.style.transform = `translateY(-${jumpY2}px) rotate(${jumpY2 > 5 ? 15 : 0}deg)`;
-      }
-      
-      // Animate wave layers with faster movement
-      if (waveLayerRef1.current && waveLayerRef2.current && waveLayerRef3.current) {
-        const time = Date.now() / 400; // Faster wave animations
-        // Each layer moves at different speeds
-        waveLayerRef1.current.style.backgroundPositionX = `${(time * 25) % 100}px`;
-        waveLayerRef2.current.style.backgroundPositionX = `${(time * -30) % 100}px`;
-        waveLayerRef3.current.style.backgroundPositionX = `${(time * 40) % 100}px`;
-      }
-      
-      requestAnimationFrame(animateElements);
-    };
+    // Floating clouds animation
+    gsap.to(".cloud", {
+      x: window.innerWidth + 200,
+      duration: 20,
+      ease: "none",
+      repeat: -1,
+      stagger: 3,
+    });
 
-    window.addEventListener('scroll', handleScroll);
-    const animationFrame = requestAnimationFrame(animateElements);
+    // Island gentle floating animation
+    gsap.to(islandRef.current, {
+      y: "+=10",
+      duration: 3,
+      ease: "power1.inOut",
+      repeat: -1,
+      yoyo: true,
+    });
 
-    // Clean up
+    // Lighthouse rotation animation for light beam
+    gsap.to(".lighthouse-beam", {
+      rotation: 360,
+      duration: 8,
+      ease: "none",
+      repeat: -1,
+    });
+
+    // Bubbles floating animation
+    gsap.to(".bubble", {
+      y: "-=100",
+      opacity: 0,
+      duration: 4,
+      ease: "power1.out",
+      repeat: -1,
+      stagger: 0.5,
+    });
+    
+    // Create a timeline for the scroll animation
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: container,
+        start: "top top",
+        end: "bottom top",
+        scrub: 1, // Smooth scrubbing
+        pin: true, // Pin the section during scroll
+      }
+    });
+
+    // Day to Night Sky Transition with more dramatic colors
+    tl.to(skyRef.current, {
+      background: "linear-gradient(to bottom, #0f0f23, #1a1a3e, #2d1b69, #1e40af)",
+      duration: 1,
+      ease: "power2.inOut"
+    }, 0);
+
+    // Sun setting animation with color change
+    tl.to(sunRef.current, {
+      y: 250,
+      x: -50,
+      opacity: 0.2,
+      scale: 1.2,
+      background: "linear-gradient(135deg, #ff6b35, #f7931e)",
+      duration: 1,
+      ease: "power2.inOut"
+    }, 0);
+
+    // Moon rising animation with glow
+    tl.fromTo(moonRef.current, {
+      y: 200,
+      opacity: 0,
+      scale: 0.3,
+      rotation: -180
+    }, {
+      y: 0,
+      opacity: 1,
+      scale: 1,
+      rotation: 0,
+      duration: 1,
+      ease: "power2.inOut"
+    }, 0.4);
+
+    // Stars appearing with twinkle effect
+    tl.to(starsRef.current, {
+      opacity: 1,
+      duration: 1,
+      ease: "power2.inOut"
+    }, 0.6);
+
+    // Birds flying animation - more dynamic
+    tl.to(birdsRef.current, {
+      x: window.innerWidth * 1.2,
+      y: -150,
+      rotation: 25,
+      scale: 0.8,
+      duration: 1.5,
+      ease: "power2.inOut"
+    }, 0);
+
+    // Ocean color change to darker night blue with waves
+    tl.to([oceanRef.current, upperOceanRef.current], {
+      background: "linear-gradient(to bottom, #1e3a8a, #1e40af)",
+      duration: 1,
+      ease: "power2.inOut"
+    }, 0.3);
+
+    // Wave intensity increase
+    tl.to(".wave", {
+      scaleY: 1.5,
+      duration: 1,
+      ease: "power2.inOut"
+    }, 0.3);
+
+    // Lighthouse light effect with rotating beam
+    tl.to(lighthouseRef.current, {
+      filter: "drop-shadow(0 0 30px #fbbf24) brightness(1.5) contrast(1.2)",
+      duration: 0.8,
+      ease: "power2.inOut"
+    }, 0.7);
+
+    // Island slight movement
+    tl.to(islandRef.current, {
+      y: "+=5",
+      duration: 1,
+      ease: "power2.inOut"
+    }, 0.5);
+
+    // Clouds fade during night
+    tl.to(".cloud", {
+      opacity: 0.3,
+      duration: 1,
+      ease: "power2.inOut"
+    }, 0.4);
+
+    // Cleanup function
     return () => {
-      window.removeEventListener('scroll', handleScroll);
-      cancelAnimationFrame(animationFrame);
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
     };
   }, []);
 
-  return (
-    <div className="relative w-full h-screen overflow-hidden">
-      {/* Dynamic ocean background with gradient */}
-      <div 
-        className="absolute inset-0 bg-gradient-to-b from-blue-400 via-blue-500 to-blue-600"
-        style={{ transform: `translateY(${scrollY * 0.2}px)` }}
-      />
-      
-      {/* Wave animation layers with improved visibility */}
-      <div 
-        ref={waveLayerRef1}
-        className="absolute inset-0 opacity-30" // Increased opacity from 20 to 30
-        style={{ 
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 10 Q 25 0, 50 10 T 100 10' stroke='white' fill='none' stroke-width='0.8'/%3E%3C/svg%3E")`,
-          backgroundSize: '100px 20px'
-        }}
-      />
-      
-      <div 
-        ref={waveLayerRef2}
-        className="absolute inset-0 opacity-25" // Increased from 15 to 25
-        style={{ 
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='120' height='30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 15 Q 30 5, 60 15 T 120 15' stroke='white' fill='none' stroke-width='0.8'/%3E%3C/svg%3E")`,
-          backgroundSize: '120px 30px'
-        }}
-      />
-      
-      <div 
-        ref={waveLayerRef3}
-        className="absolute inset-0 opacity-20" // Increased from 10 to 20
-        style={{ 
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='80' height='15' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 7.5 Q 20 2.5, 40 7.5 T 80 7.5' stroke='white' fill='none' stroke-width='0.8'/%3E%3C/svg%3E")`,
-          backgroundSize: '80px 15px'
-        }}
-      />
+  // Generate random stars with enhanced twinkling
+  const generateStars = () => {
+    const stars = [];
+    for (let i = 0; i < 100; i++) {
+      const size = Math.random() * 3 + 1;
+      const style = {
+        left: `${Math.random() * 100}%`,
+        top: `${Math.random() * 70}%`,
+        width: `${size}px`,
+        height: `${size}px`,
+        animationDelay: `${Math.random() * 4}s`,
+        animationDuration: `${1 + Math.random() * 3}s`,
+        opacity: Math.random() * 0.8 + 0.2,
+      };
+      stars.push(
+        <div
+          key={i}
+          className="absolute bg-white rounded-full animate-pulse"
+          style={style}
+        />
+      );
+    }
+    return stars;
+  };
 
-      {/* Main content container */}
-      <div className="absolute inset-0 flex items-center justify-center z-10">
-        <div className="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-8">
-          {/* Map container with increased size */}
-          <div className="w-full md:w-3/5 flex justify-center relative">
-            <div className="relative w-full max-w-xl">
-              {/* Map */}
-              <div 
-                ref={mapRef}
-                className="relative mx-auto"
-                style={{ 
-                  transform: `translateY(${scrollY * -0.1}px)`
-                }}
-              >
-                <img 
-                  src={map} 
-                  alt="Andaman Islands Map" 
-                  className="w-full h-auto max-h-[500px] object-contain"
+  // Generate floating clouds
+  const generateClouds = () => {
+    const clouds = [];
+    for (let i = 0; i < 4; i++) {
+      const style = {
+        left: `${-20 + i * 30}%`,
+        top: `${10 + Math.random() * 30}%`,
+        animationDelay: `${i * 5}s`,
+      };
+      clouds.push(
+        <div
+          key={i}
+          className="cloud absolute opacity-60"
+          style={style}
+        >
+          <div className="w-16 h-8 bg-white rounded-full relative">
+            <div className="absolute -left-4 top-0 w-12 h-6 bg-white rounded-full" />
+            <div className="absolute -right-4 top-1 w-10 h-5 bg-white rounded-full" />
+            <div className="absolute left-2 -top-2 w-8 h-4 bg-white rounded-full" />
+          </div>
+        </div>
+      );
+    }
+    return clouds;
+  };
+
+  return (
+    <div className="h-[200vh]"> {/* Make container scrollable */}
+      <div 
+        ref={containerRef}
+        className="relative w-full h-screen overflow-hidden"
+      >
+        {/* Sky Background */}
+        <div 
+          ref={skyRef}
+          className="absolute inset-0 bg-gradient-to-b from-sky-200 to-sky-300 transition-all duration-1000"
+        />
+
+        {/* Floating Clouds */}
+        <div className="absolute inset-0 z-5">
+          {generateClouds()}
+        </div>
+
+        {/* Stars (initially hidden) */}
+        <div ref={starsRef} className="absolute inset-0 opacity-0 z-8">
+          {generateStars()}
+        </div>
+
+        {/* Sun with rays */}
+        <div 
+          ref={sunRef}
+          className="absolute top-16 left-1/2 transform -translate-x-1/2 z-10 transition-all duration-1000"
+        >
+          <div className="relative w-40 h-40">
+            {/* Sun rays */}
+            <div className="absolute inset-0 animate-spin" style={{ animationDuration: '20s' }}>
+              {[...Array(8)].map((_, i) => (
+                <div
+                  key={i}
+                  className="absolute w-1 h-20 bg-yellow-200 opacity-60"
+                  style={{
+                    left: '50%',
+                    top: '-10px',
+                    transformOrigin: '50% 90px',
+                    transform: `rotate(${i * 45}deg)`,
+                  }}
                 />
-                
-                {/* Location markers */}
-                
-                
-                {/* Boats with realistic movement */}
-                <div 
-                  ref={boatRef1}
-                  className="absolute bottom-1/3 left-5 transition-transform"
-                >
-                  <svg width="40" height="20" viewBox="0 0 40 20" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M5 10 L20 10 L35 10 L30 18 L10 18 L5 10 Z" fill="#6b4226" />
-                    <path d="M20 2 L20 10 L15 10 Z" fill="white" />
-                    <path d="M20 2 L20 10 L25 10 Z" fill="#eee" />
-                  </svg>
-                </div>
-                
-                <div 
-                  ref={boatRef2}
-                  className="absolute bottom-1/4 right-8 transition-transform"
-                >
-                  <svg width="30" height="15" viewBox="0 0 30 15" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M3 8 L15 8 L27 8 L24 14 L6 14 L3 8 Z" fill="#8B4513" />
-                    <path d="M15 1 L15 8 L10 8 Z" fill="white" />
-                    <path d="M15 1 L15 8 L20 8 Z" fill="#eee" />
-                  </svg>
-                </div>
-                
-                {/* Additional boats */}
-                <div 
-                  ref={boatRef3}
-                  className="absolute top-1/3 right-1/4 transition-transform"
-                >
-                  <svg width="35" height="18" viewBox="0 0 35 18" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M4 9 L17 9 L31 9 L27 16 L8 16 L4 9 Z" fill="#5D4037" />
-                    <path d="M17 2 L17 9 L12 9 Z" fill="white" />
-                    <path d="M17 2 L17 9 L22 9 Z" fill="#f5f5f5" />
-                  </svg>
-                </div>
-                
-                <div 
-                  ref={boatRef4}
-                  className="absolute top-2/3 left-1/4 transition-transform"
-                >
-                  <svg width="30" height="15" viewBox="0 0 30 15" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M3 8 L15 8 L27 8 L24 14 L6 14 L3 8 Z" fill="#795548" />
-                    <path d="M15 1 L15 8 L10 8 Z" fill="white" />
-                    <path d="M15 1 L15 8 L20 8 Z" fill="#f0f0f0" />
-                  </svg>
-                </div>
-                
-                {/* Jumping dolphins */}
-                <div 
-                  ref={dolphinRef1}
-                  className="absolute bottom-1/5 left-1/3 transition-all duration-200" // Faster transition
-                >
-                  <svg width="36" height="24" viewBox="0 0 36 24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M2 12 Q 8 4, 18 8 T 34 12 Q 30 16, 22 16 T 10 18 T 2 12" fill="#607D8B" />
-                    <circle cx="6" cy="10" r="1" fill="black" />
-                    <path d="M28 10 L 30 8 L 32 10" stroke="#607D8B" strokeWidth="1" fill="none" />
-                  </svg>
-                </div>
-                
-                <div 
-                  ref={dolphinRef2}
-                  className="absolute bottom-1/4 right-1/3 transition-all duration-200" // Faster transition
-                >
-                  <svg width="30" height="20" viewBox="0 0 30 20" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M2 10 Q 7 4, 15 7 T 28 10 Q 25 14, 18 14 T 8 15 T 2 10" fill="#78909C" />
-                    <circle cx="5" cy="8" r="1" fill="black" />
-                    <path d="M22 8 L 24 6 L 26 8" stroke="#78909C" strokeWidth="1" fill="none" />
-                  </svg>
-                </div>
-              </div>
+              ))}
+            </div>
+            {/* Sun body */}
+            <div className="absolute inset-4 rounded-full bg-gradient-to-br from-yellow-300 to-yellow-400 shadow-lg" />
+          </div>
+        </div>
+
+        {/* Moon with craters and glow */}
+        <div 
+          ref={moonRef}
+          className="absolute top-16 right-1/4 w-32 h-32 z-10 opacity-0"
+        >
+          <div className="relative">
+            {/* Moon glow */}
+            <div className="absolute -inset-4 rounded-full bg-blue-100 opacity-20 blur-xl" />
+            {/* Moon body */}
+            <div 
+              className="w-32 h-32 rounded-full"
+              style={{
+                background: "radial-gradient(circle at 30% 30%, #f9fafb, #e5e7eb, #d1d5db)",
+                boxShadow: "inset -8px -8px 15px rgba(0,0,0,0.1), 0 0 20px rgba(219, 234, 254, 0.5)"
+              }}
+            >
+              {/* Moon craters */}
+              <div className="absolute top-4 left-6 w-3 h-3 bg-gray-300 rounded-full opacity-40" />
+              <div className="absolute top-8 right-8 w-2 h-2 bg-gray-300 rounded-full opacity-30" />
+              <div className="absolute bottom-6 left-8 w-4 h-4 bg-gray-300 rounded-full opacity-35" />
             </div>
           </div>
-          
-          {/* Text content with cleaner styling */}
-          <div className="w-full md:w-2/5 text-white">
-            <div className="p-6">
-              <h1 className="text-4xl md:text-5xl font-bold mb-4 tracking-tight">
-                WORLD TREK
-              </h1>
-              
-              <div className="w-16 h-1 bg-yellow-400 mb-6"></div>
-              
-              <p className="text-lg md:text-xl mb-8 font-light leading-relaxed">
-                Experience the pristine paradise of Andaman Islands with our exclusive guided tours and luxury accommodations.
-              </p>
-              
-              <div className="flex flex-wrap gap-4">
-                <button className="px-6 py-3 bg-yellow-500 text-black font-bold rounded-lg hover:bg-yellow-400 transition-all duration-300 shadow-lg flex items-center gap-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M5 12h14M12 5l7 7-7 7"/>
-                  </svg>
-                  Explore Packages
-                </button>
-                
-                <button className="px-6 py-3 bg-transparent text-white border border-white/50 font-medium rounded-lg hover:bg-white/10 transition-all duration-300">
-                  View Gallery
-                </button>
-              </div>
+        </div>
+
+        {/* Birds - Using your bird image */}
+        <div ref={birdsRef} className="absolute top-16 left-24 z-10">
+          <img src={birdImage} alt="Flying birds" className="w-auto h-16" />
+        </div>
+
+        {/* Main Island - Using your island image - Centered */}
+        <div ref={islandRef} className="absolute bottom-20 left-1/2 transform -translate-x-1/2 z-20">
+          <img src={islandImage} alt="Tropical island" className="w-full h-auto max-w-2xl drop-shadow-lg" />
+        </div>
+
+        {/* Lighthouse Island - Using your lighthouse image - Right side */}
+        <div ref={lighthouseRef} className="absolute bottom-20 right-16 z-20 transition-all duration-500">
+          <div className="relative">
+            <img src={lighthouseImage} alt="Island with lighthouse" className="w-80 h-auto drop-shadow-lg" />
+            {/* Lighthouse beam effect */}
+            <div className="lighthouse-beam absolute top-0 left-1/2 transform -translate-x-1/2 origin-bottom opacity-30">
+              <div 
+                className="w-2 h-40 bg-gradient-to-t from-yellow-200 to-transparent"
+                style={{
+                  clipPath: 'polygon(40% 100%, 60% 100%, 80% 0%, 20% 0%)',
+                  filter: 'blur(2px)'
+                }}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Animated Waves */}
+        <div ref={wavesRef} className="absolute bottom-0 w-full z-16 overflow-hidden">
+          {/* Multiple wave layers for depth */}
+          <div className="wave absolute bottom-0 left-0 w-full h-16 opacity-60">
+            <svg
+              className="absolute bottom-0 left-0 w-full h-full"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 1200 120"
+              preserveAspectRatio="none"
+            >
+              <path
+                d="M0,60 C150,100 350,0 600,60 C850,120 1050,20 1200,60 L1200,120 L0,120 Z"
+                fill="rgba(59, 130, 246, 0.8)"
+              />
+            </svg>
+          </div>
+          <div className="wave absolute bottom-0 left-0 w-full h-20 opacity-40" style={{ animationDelay: '-1s' }}>
+            <svg
+              className="absolute bottom-0 left-0 w-full h-full"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 1200 120"
+              preserveAspectRatio="none"
+            >
+              <path
+                d="M0,80 C200,120 400,40 600,80 C800,120 1000,40 1200,80 L1200,120 L0,120 Z"
+                fill="rgba(96, 165, 250, 0.6)"
+              />
+            </svg>
+          </div>
+          <div className="wave absolute bottom-0 left-0 w-full h-12 opacity-80" style={{ animationDelay: '-2s' }}>
+            <svg
+              className="absolute bottom-0 left-0 w-full h-full"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 1200 120"
+              preserveAspectRatio="none"
+            >
+              <path
+                d="M0,40 C120,80 280,0 600,40 C920,80 1080,0 1200,40 L1200,120 L0,120 Z"
+                fill="rgba(147, 197, 253, 0.8)"
+              />
+            </svg>
+          </div>
+        </div>
+
+        {/* Upper Ocean layer */}
+        <div 
+          ref={upperOceanRef}
+          className="absolute bottom-0 w-full z-15 h-24 bg-gradient-to-t from-blue-400 to-blue-300 transition-all duration-1000"
+        />
+        
+        {/* Main Ocean/Sea */}
+        <div className="absolute bottom-0 w-full z-10">
+          <div 
+            ref={oceanRef}
+            className="w-full h-40 bg-gradient-to-t from-blue-600 to-blue-500 relative transition-all duration-1000"
+          >
+            {/* Enhanced Bubbles with different sizes and animations */}
+            <div className="bubble absolute -top-2 left-1/4 w-8 h-8 bg-blue-300 rounded-full opacity-40" />
+            <div className="bubble absolute top-4 left-1/2 w-12 h-12 bg-blue-200 rounded-full opacity-30" style={{ animationDelay: '1s' }} />
+            <div className="bubble absolute top-2 left-3/4 w-6 h-6 bg-blue-300 rounded-full opacity-50" style={{ animationDelay: '2s' }} />
+            <div className="bubble absolute top-10 left-1/3 w-10 h-10 bg-blue-300 rounded-full opacity-35" style={{ animationDelay: '0.5s' }} />
+            <div className="bubble absolute top-12 left-2/3 w-14 h-14 bg-blue-200 rounded-full opacity-25" style={{ animationDelay: '1.5s' }} />
+            <div className="bubble absolute top-6 left-1/6 w-4 h-4 bg-blue-400 rounded-full opacity-60" style={{ animationDelay: '3s' }} />
+            <div className="bubble absolute top-16 left-5/6 w-9 h-9 bg-blue-300 rounded-full opacity-40" style={{ animationDelay: '2.5s' }} />
+            
+            {/* Underwater light rays */}
+            <div className="absolute inset-0 overflow-hidden">
+              <div className="absolute top-0 left-1/4 w-1 h-full bg-gradient-to-b from-blue-200 to-transparent opacity-20 animate-pulse" />
+              <div className="absolute top-0 left-1/2 w-2 h-full bg-gradient-to-b from-blue-100 to-transparent opacity-30 animate-pulse" style={{ animationDelay: '1s' }} />
+              <div className="absolute top-0 left-3/4 w-1 h-full bg-gradient-to-b from-blue-200 to-transparent opacity-25 animate-pulse" style={{ animationDelay: '2s' }} />
+            </div>
+          </div>
+        </div>
+
+        {/* Scroll indicator */}
+        <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-30">
+          <div className="animate-bounce">
+            <div className="w-6 h-10 border-2 border-white rounded-full flex justify-center">
+              <div className="w-1 h-3 bg-white rounded-full mt-2 animate-pulse" />
             </div>
           </div>
         </div>
       </div>
+
+      {/* Content section to enable scrolling */}
+      <div className="h-screen bg-gray-900 flex items-center justify-center">
+        <div className="text-center text-white">
+          <h2 className="text-4xl font-bold mb-4">Welcome to Our Coastal Paradise</h2>
+          <p className="text-xl">Scroll up to see the magic happen again!</p>
+        </div>
+      </div>
     </div>
   );
-};
-
-export default WorldTrekHero;
+}

@@ -47,7 +47,7 @@ const FlippingProductCards = () => {
   };
 
   return (
-    <div className="p-8 bg-gradient-to-b from-blue-50 to-blue-100 min-h-screen">
+    <div className="p-8 bg-gradient-to-br from-blue-50 to-cyan-100 min-h-screen">
       <div className="flex justify-center mb-12">
         <div className="relative text-center">
           <h2 className="text-4xl font-bold text-blue-900 drop-shadow-sm">Our Packages</h2>
