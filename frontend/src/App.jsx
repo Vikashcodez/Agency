@@ -8,6 +8,7 @@ import Register from './Admin/Register'
 import AdminDashboard from './Admin/Dashboard'
 import AddPackage from './Admin/AddPackage'
 import Packages from './Pages/Packages'
+import ContactPage from './Pages/Contact'
 
 const App = () => {
   return (
@@ -17,7 +18,7 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/destinations" element={<Packages />} />
         <Route path="/about" element= {< About />} />
-        <Route path="/contact" element={<div>Contact Page</div>} />
+        <Route path="/contact" element={<ContactPage />} />
         <Route path="/signin" element={ <Login />} />
         <Route path="/signup" element={<Register />} />
         <Route path="/booking" element={<div>Booking Page</div>} />
